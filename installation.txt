@@ -1,0 +1,50 @@
+# 0) Ouvre un Terminal *natif ARM* (désactive "Open using Rosetta" sur Terminal.app)
+arch
+# doit afficher: arm64
+
+# 1) Crée un environnement ARM explicitement
+CONDA_SUBDIR=osx-arm64 conda create -n tf-arm python=3.11 -y
+
+# 2) Active l’environnement et fige le sous-dépôt ARM pour lui
+conda activate tf-arm
+conda config --env --set subdir osx-arm64
+
+# 3) Vérifie que Python est bien arm64
+python -c "import platform,sys; print('machine=', platform.machine()); print('python=', sys.version)"
+file $(which python)
+# -> doit afficher arm64 / Mach-O arm64
+
+# 4) Installe TensorFlow pour macOS (CPU)
+python -m pip install --upgrade pip setuptools wheel
+pip install tensorflow-macos==2.16.1
+
+# 5) (Optionnel) retire JAX si présent, il ne sert pas pour TF ici
+python -m pip uninstall -y jax jaxlib || true
+
+# 6) Kernel Jupyter (si tu utilises Jupyter/VS Code)
+python -m pip install ipykernel
+python -m ipykernel install --user --name tf-arm --display-name "tf-arm (Python 3.11)"
+
+
+#########
+
+installation: 
+# 1) Nouvel env propre en Python 3.11
+conda create -n tf-mac python=3.11 -y
+conda activate tf-mac
+python -m pip install --upgrade pip
+
+# 2) TensorFlow pour macOS + accélération GPU Metal
+pip install tensorflow
+
+ipykernel
+
+# 1) Activer l’env tf-mac
+conda activate tf-mac
+
+# 2) Installer ipykernel (dans cet env)
+python -m pip install --upgrade pip
+python -m pip install ipykernel
+
+# 3) Enregistrer le kernel Jupyter
+python -m ipykernel install --user --name tf-mac --display-name "tf-mac (Python 3.11)"

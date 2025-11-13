@@ -12,5 +12,6 @@ Finally, the frontend and deployment phase involves developing user interfaces w
                     cd frontend 
                     npm install --from-lock-json
                     npm audit fix 
+                    # you have to change env.exemple to env, than 
                     export NODE_OPTIONS=--openssl-legacy-provider 
                     npm run start

@@ -15,3 +15,24 @@ Finally, the frontend and deployment phase involves developing user interfaces w
                     # you have to change env.exemple to env, than 
                     export NODE_OPTIONS=--openssl-legacy-provider 
                     npm run start
+
+Deploying the TF Model (.h5) on GCP
+Create a GCP account.
+Create a Project on GCP (Keep note of the project id).
+Create a GCP bucket.
+Upload the tf .h5 model generate in the bucket in the path models/potato-model.h5.
+Install Google Cloud SDK (Setup instructions).
+Authenticate with Google Cloud SDK.
+gcloud auth login
+Run the deployment script.
+cd gcp
+gcloud functions deploy predict \
+  --gen2 \                 
+  --region=europe-west1 \
+  --runtime=python313 \
+  --entry-point=predict \
+  --trigger-http \
+  --allow-unauthenticated \
+  --memory=2048MB \
+  --timeout=540s \
+  --project=potatos-classification-object
